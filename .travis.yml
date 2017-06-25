@@ -1,6 +1,9 @@
 language: java
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 jdk:
-  - openjdk8
   - oraclejdk8
 cache:
   directories:
