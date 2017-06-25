@@ -9,5 +9,5 @@ cache:
   directories:
     - $HOME/.m2
 script:
-  - ./mvn clean test
+  - mvn clean test
   - bash <(curl -s https://codecov.io/bash)
