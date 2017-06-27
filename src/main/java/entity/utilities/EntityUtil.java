@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import entity.utilities.function.Explode;
 import entity.utilities.function.FindBy;
+import entity.utilities.function.Is;
 
 public class EntityUtil{
 
@@ -18,7 +19,8 @@ public class EntityUtil{
 
 	@SuppressWarnings( {"unchecked", "rawtypes"} )
 	public static <T> List<T> explode( List<? > list, String propertyName ){
-		return (List<T>) list.stream().map( elem -> new Explode().apply( elem, propertyName ) ).filter( elem -> elem != null ).collect( Collectors.toList() );
+		Explode explode = new Explode();
+		return (List<T>) list.stream().map( elem -> explode.apply( elem, propertyName ) ).filter( elem -> elem != null ).collect( Collectors.toList() );
 	}
 
 	public static <T> List<T> findById( List<T> list, Integer id ){
@@ -70,18 +72,21 @@ public class EntityUtil{
 	}
 
 	@SuppressWarnings( {"unchecked", "rawtypes"} )
-	public static <T> Map<Object, T> mapFromList( List<T> list, String property ){
+	public static <T, K, V> Map<K, V> mapFromList( List<T> list, String property ){
 		Explode explode = new Explode();
-		return (Map<Object, T>) list.stream().map( elem -> explode.apply( elem, property ) ).collect( Collectors.groupingBy( Function.identity() ) );
+		return (Map<K, V>) list.stream().map( elem -> explode.apply( elem, property ) ).collect( Collectors.groupingBy( Function.identity() ) );
 	}
 
 	@SuppressWarnings( {"unchecked"} )
-	public static <T> Map<Object, T> mapFromList( List<T> list ){
+	public static <T, K, V> Map<Object, T> mapFromList( List<T> list ){
 		return (Map<Object, T>) list.stream().collect( Collectors.groupingBy( Function.identity() ) );
 	}
 
 	public static String[] trimStringArray( String[] sArray ){
-		return (String[]) Stream.of( sArray ).map( elem -> elem.trim() ).toArray();
+		return Stream.of( sArray ).map( String::trim ).filter( Is.not( String::isEmpty ) ).toArray( String[]::new );
+	}
 
+	public static List<String> trimStringList( List<String> list ){
+		return list.stream().map( String::trim ).filter( Is.not( String::isEmpty ) ).collect( Collectors.toList() );
 	}
 }

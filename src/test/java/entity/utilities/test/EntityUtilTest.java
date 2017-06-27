@@ -1,6 +1,7 @@
 package entity.utilities.test;
 
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -8,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -154,6 +156,29 @@ public class EntityUtilTest{
 		assertThat( b, hasItems( "B", "B" ) );
 		assertThat( c, hasItems( "C", "C", "C" ) );
 		assertThat( d, hasItems( "D" ) );
+	}
+
+	@SuppressWarnings( "rawtypes" )
+	@Test
+	public void implodeDelimiter(){
+		List<Integer> intList = Arrays.asList( 1, 2, 3, 4, 5, 6, 7, 8 );
+		String joinedList = EntityUtil.implode( intList, "-" );
+		assertThat( joinedList, is( "1-2-3-4-5-6-7-8" ) );
+		List<HashSet> objectList = Arrays.asList( new HashSet<>(), new HashSet<>(), new HashSet<>() );
+		joinedList = EntityUtil.implode( objectList, "," );
+		assertThat( joinedList, is( "[],[],[]" ) );
+	}
+
+	@Test
+	public void trimList(){
+		List<String> stringList = Arrays.asList( " ", " test", " the", "trim " );
+		assertThat( EntityUtil.trimStringList( stringList ), is( Arrays.asList( "test", "the", "trim" ) ) );
+	}
+
+	@Test
+	public void trimArray(){
+		String[] stringArr = new String[]{" ", " test", " the", "trim "};
+		assertThat( EntityUtil.trimStringArray( stringArr ), is( new String[]{"test", "the", "trim"} ) );
 	}
 
 }
